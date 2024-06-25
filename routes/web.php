@@ -7,4 +7,4 @@ use Illuminate\Support\Facades\Route;
 //     return view('tasks.index');
 // });
 
-Route::resource('/', TaskController::class)->only('index');
+Route::resource('/', TaskController::class)->only('index', 'store', 'create');
