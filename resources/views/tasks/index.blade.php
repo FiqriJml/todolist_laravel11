@@ -20,14 +20,15 @@
             </div>
         @endif
         <a class="bg-green-600 text-white py-1 px-2 rounded-sm shadow-md hover:bg-green-700"
-            href="{{ route('create') }}">add task</a>
+            href="{{ route('tasks.create') }}">add task</a>
         <table class="table-auto border border-collapse border-slate-400 mt-2 w-full">
             <thead>
                 <tr>
                     <th class="px-4 py-2 border border-slate-300 w-10">No</th>
                     <th class="px-4 py-2 border border-slate-300">title</th>
                     <th class="px-4 py-2 border border-slate-300">description</th>
-                    <th class="px-4 py-2 border border-slate-300 w-10">status</th>
+                    <th class="px-4 py-2 border border-slate-300 w-20">status</th>
+                    <th class="px-4 py-2 border border-slate-300 w-10">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,11 +38,34 @@
                         <td class="p-2 border border-slate-200">{{ $task->title }}</td>
                         <td class="p-2 border border-slate-200">{{ $task->description }}</td>
                         <td class="p-2 border border-slate-200 text-center font-extralight text-sm">
-                            @if ($task->is_completed)
-                                <span class="bg-green-600 p-2 rounded-md text-slate-200 font-semibold">Completed</span>
-                            @else
-                                <span class="bg-red-600 p-2 rounded-md text-slate-200 font-semibold">Ongoing</span>
-                            @endif
+                            <form action="{{ route('tasks.is_completed', $task->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                @if ($task->is_completed)
+                                    <button type="submit"
+                                        class="bg-green-500 hover:bg-green-700 px-2 py-1 rounded-full text-slate-200 text-small font-medium">Completed</button>
+                                @else
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-700 px-2 py-1 rounded-full text-slate-200 text-small font-medium">Incomplete</button>
+                                @endif
+                            </form>
+                        </td>
+                        <td class="p-2 border border-slate-200">
+                            <!-- Edit Button -->
+                            <a href="{{ route('tasks.edit', $task->id) }}" class="text-blue-500 hover:text-blue-700">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
+                            <!-- Delete Button -->
+                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700"
+                                    onclick="return confirm('Are you sure you want to delete this task')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

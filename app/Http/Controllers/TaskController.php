@@ -42,7 +42,7 @@ class TaskController extends Controller
         $task->title = $request->title;
         $task->description = $request->description;
         $task->save();
-        return redirect()->route('index')->with('success', 'Task created succesfully');
+        return redirect()->route('tasks.index')->with('success', 'Task created succesfully');
 
     }
 
@@ -59,7 +59,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -67,7 +67,15 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        // validate incoming request data
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $task->update($request->all());
+
+        return redirect()->route('tasks.index')->with('success', 'Task Updated Succsesfully');
     }
 
     /**
@@ -75,6 +83,17 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully');
+    }
+
+    public function is_completed(Task $task)
+    {
+        $task->update([
+            'is_completed' => !$task->is_completed,
+        ]);
+
+        return redirect()->route('tasks.index');
     }
 }

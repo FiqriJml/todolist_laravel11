@@ -7,4 +7,6 @@ use Illuminate\Support\Facades\Route;
 //     return view('tasks.index');
 // });
 
-Route::resource('/', TaskController::class)->only('index', 'store', 'create');
+Route::resource('/tasks', TaskController::class);
+
+Route::put('/tasks/{task}', [TaskController::class, 'is_completed'])->name('tasks.is_completed');
